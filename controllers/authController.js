@@ -5,7 +5,7 @@ const User = require("../models/User");
 // @desc    Register new user
 // @route   POST /api/auth/register
 // @access  Public
-exports.registerUser = async (req, res) => {
+exports.registerUser = async (req, res, next) => {
   try {
     console.log("👉 Inside registerUser controller");
     const { name, email, password, location } = req.body;
@@ -42,14 +42,14 @@ exports.registerUser = async (req, res) => {
     res.json({ token });
   } catch (err) {
     console.error("❌ Error in registerUser:", err.message);
-    res.status(500).send("Server error");
+    next(err);
   }
 };
 
 // @desc    Login user
 // @route   POST /api/auth/login
 // @access  Public
-exports.loginUser = async (req, res) => {
+exports.loginUser = async (req, res, next) => {
   try {
     console.log("👉 Inside loginUser controller");
     const { email, password } = req.body;
@@ -81,6 +81,6 @@ exports.loginUser = async (req, res) => {
     res.json({ token });
   } catch (err) {
     console.error("❌ Error in loginUser:", err.message);
-    res.status(500).send("Server error");
+    next(err);
   }
 };

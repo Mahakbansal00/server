@@ -1,23 +1,22 @@
 const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 
-const authMiddleware = (req, res, next) => {
-  // Get token from header
-  const token = req.header('Authorization')?.split(' ')[1];
+const authMiddleware = async (req, res, next) => {
+  const token = req.header('Authorization')?.replace('Bearer ', '').trim();
 
   if (!token) {
     return res.status(401).json({ msg: 'No token, authorization denied' });
   }
 
   try {
-    // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // Attach user id to request
-    req.user = decoded.id;
+    // Attach the full user object, not just ID
+    req.user = await User.findById(decoded.id).select('-password');
 
     next();
   } catch (err) {
-    res.status(401).json({ msg: 'Token is not valid' });
+    next(err); // Pass error to centralized error handler
   }
 };
 
