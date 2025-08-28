@@ -29,5 +29,7 @@ app.use('/api/skills', require('./routes/skill')); // <- add this line
 // Centralized error handling middleware
 app.use(errorHandler);
 
+app.use('/api/match', require('./routes/match'));
+
 const PORT = 4001; // Explicitly set to 4001
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
